@@ -15,6 +15,7 @@ namespace ReadOn.DbContexts
         public DbSet<Book> Books { get; set; }
         public DbSet<Branch> Branches { get; set; }
         public DbSet<LoanPreview> LoanPreviews { get; set; }
+        public DbSet<OTP> OTPs { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -32,6 +33,15 @@ namespace ReadOn.DbContexts
                     .WithMany(b => b.LoanPreviews)
                     .HasForeignKey(lp => lp.BookId);
             });
+
+            modelBuilder.Entity<OTP>(o =>
+            {
+                o.ToTable("OTP");
+                o.HasKey(o => o.Id);
+                o.HasOne(o => o.ApplicationAccount)
+                    .WithMany(a => a.OTPs)
+                    .HasForeignKey(o => o.ApplicationAccountId);
+            });
                 
 
             modelBuilder.Entity<ApplicationAccount>(a =>
@@ -48,6 +58,10 @@ namespace ReadOn.DbContexts
                 a.HasMany(a => a.LoanPreviews)
                     .WithOne(lp => lp.ApplicationAccount)
                     .HasForeignKey(lp => lp.ApplicationAccountId)
+                    .OnDelete(DeleteBehavior.Restrict);
+                a.HasMany(a=> a.OTPs)
+                    .WithOne(o => o.ApplicationAccount)
+                    .HasForeignKey(o => o.ApplicationAccountId)
                     .OnDelete(DeleteBehavior.Restrict);
             });
 

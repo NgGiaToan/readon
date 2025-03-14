@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ReadOn.DbContexts;
 using ReadOn.Dtos;
+using ReadOn.Helpers;
 using ReadOn.Services;
 using System.Threading.Tasks;
 
@@ -18,14 +20,15 @@ namespace ReadOn.Controllers
             _loanService = loanService;
         }
 
-
-        [HttpGet("statistics")]
+        [Authorize(Roles = AppRole.Admin)]
+        [HttpGet("dashboard-statistics")]
         public async Task<IActionResult> GetLoanStatistics()
         {
             var statistics = await _loanService.GetLoanStatisticsAsync();
             return Ok(statistics);
         }
 
+        [Authorize]
         [HttpGet("user_statistics")]
         public async Task<IActionResult> GetUserLoanStatistics(Guid id)
         {
@@ -33,13 +36,15 @@ namespace ReadOn.Controllers
             return Ok(user_statistics);
         }
 
-        [HttpGet("dboverdueborrowers")]
+        [Authorize(Roles = AppRole.Admin)]
+        [HttpGet("dashboard-overdueborrowers")]
         public async Task<IActionResult> GetDBOverdueBorrowers()
         {
             List<ItemDto> dboverdueborrowers = await _loanService.DBOverdueBorrowersAsync();
             return Ok(dboverdueborrowers);
         }
 
+        [Authorize(Roles = AppRole.Admin)]
         [HttpGet("overdueborrowers")]
         public async Task<IActionResult> GetOverdueBorrowers(string? n)
         {
@@ -47,6 +52,7 @@ namespace ReadOn.Controllers
             return Ok(overborrowers);
         }
 
+        [Authorize(Roles = AppRole.Admin)]
         [HttpGet("borrowed")]
         public async Task<IActionResult> GetBorrowed(string? n)
         {
@@ -54,6 +60,7 @@ namespace ReadOn.Controllers
             return Ok(overborrowers);
         }
 
+        [Authorize(Roles = AppRole.Admin)]
         [HttpGet("loandetail")]
         public async Task<IActionResult> GetOverdueBorrowersDetail(Guid id)
         {
@@ -61,28 +68,32 @@ namespace ReadOn.Controllers
             return Ok(bookDetailDtos);
         }
 
-        [HttpGet("userborrowed")]
+        [Authorize]
+        [HttpGet("user-borrowedbook")]
         public async Task<IActionResult> GetUserBorrowed(Guid id, string? n) 
         {
             var borrowed = await _loanService.UserBorrowedAsync(id, n);
             return Ok(borrowed);
         }
 
-        [HttpGet("userreturned")]
+        [Authorize]
+        [HttpGet("user-returnedbook")]
         public async Task<IActionResult> GetUserReturned(Guid id, string? n)
         {
             var borrowed = await _loanService.UserReturnedAsync(id, n);
             return Ok(borrowed);
         }
 
-        [HttpPut("User_returned")]
+        [Authorize]
+        [HttpPut("user_returned")]
         public async Task<IActionResult> UserReturnedAsync(Guid id)
         {
             var result = await _loanService.UserReturnedDetailAsync(id);
             return Ok(result);
         }
 
-        [HttpPost("Create_Borrewed")]
+        [Authorize]
+        [HttpPost("user_borrewed")]
         public async Task<IActionResult> CreateBorrowed(Guid userId)
         {
             var result = await _loanService.AddBorrowedAsync(userId);

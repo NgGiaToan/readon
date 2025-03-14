@@ -16,11 +16,13 @@ namespace ReadOn.DbContexts
         public ICollection<Loan> Loans { get; set; }
         public ICollection<Book> Books { get; set; }
         public ICollection<LoanPreview> LoanPreviews { get; set; }
+        public ICollection<OTP> OTPs { get; set; }
         public ApplicationAccount()
         {
             Loans = new List<Loan>();
             Books = new List<Book>();
             LoanPreviews = new List<LoanPreview>();
+            OTPs = new List<OTP>();
             SecurityStamp = Guid.NewGuid().ToString();
         }
 
