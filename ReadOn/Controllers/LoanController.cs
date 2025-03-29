@@ -29,7 +29,7 @@ namespace ReadOn.Controllers
         }
 
         [Authorize]
-        [HttpGet("user_statistics")]
+        [HttpGet("user-statistics")]
         public async Task<IActionResult> GetUserLoanStatistics(Guid id)
         {
             var user_statistics = await _loanService.GetUserLoanStatisticsAsync(id);
@@ -60,7 +60,7 @@ namespace ReadOn.Controllers
             return Ok(overborrowers);
         }
 
-        [Authorize(Roles = AppRole.Admin)]
+        [Authorize]
         [HttpGet("loandetail")]
         public async Task<IActionResult> GetOverdueBorrowersDetail(Guid id)
         {
@@ -85,7 +85,7 @@ namespace ReadOn.Controllers
         }
 
         [Authorize]
-        [HttpPut("user_returned")]
+        [HttpPut("user-returned")]
         public async Task<IActionResult> UserReturnedAsync(Guid id)
         {
             var result = await _loanService.UserReturnedDetailAsync(id);
@@ -93,7 +93,7 @@ namespace ReadOn.Controllers
         }
 
         [Authorize]
-        [HttpPost("user_borrewed")]
+        [HttpPost("user-borrewed")]
         public async Task<IActionResult> CreateBorrowed(Guid userId)
         {
             var result = await _loanService.AddBorrowedAsync(userId);

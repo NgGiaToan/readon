@@ -42,7 +42,6 @@ namespace ReadOn.Controllers
             }
         }
 
-        [Authorize]
         [HttpPost("logout")]
         public async Task<IActionResult> Logout(Guid id)
         {

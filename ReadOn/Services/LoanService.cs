@@ -62,7 +62,7 @@ namespace ReadOn.Services
                 .Where(l => l.Duedate < DateTime.Now && l.Returndate == null)
                 .Select(l => new ItemDto
                 {
-                    Fullname = l.ApplicationAccount.Lastname + l.ApplicationAccount.Firstname,
+                    Fullname = l.ApplicationAccount.Firstname + " "+ l.ApplicationAccount.Lastname,
                     Id = l.Id
                 })
                 .ToListAsync();

@@ -39,9 +39,9 @@ namespace ReadOn.Controllers
 
         [Authorize(Roles = AppRole.Admin)]
         [HttpGet("user-manager")]
-        public async Task<IActionResult> Users()
+        public async Task<IActionResult> Users(string? n)
         {
-            List<UserDto> user = await _accountService.UserAsync();
+            List<UserDto> user = await _accountService.UserAsync(n);
             return Ok(user);
         }
 

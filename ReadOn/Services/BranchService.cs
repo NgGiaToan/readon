@@ -36,17 +36,22 @@ namespace ReadOn.Services
             return branches;
         }
 
-        public async Task<List<BranchDto>> BranchAsync()
+        public async Task<List<BranchDto>> BranchAsync(string? n)
         {
-            var branch = await _dbContext.Branches
+            var branch = _dbContext.Branches
                 .Select(b => new BranchDto
                 {
                     Id = b.Id,
                     Name = b.Name,
                     ContactNo = b.Contact,
                     Location = b.Location,
-                }).ToListAsync();
-            return branch;
+                });
+            if (!string.IsNullOrEmpty(n))
+            {
+                n = n.Trim();
+                branch = branch.Where(b => b.Id.ToString().Contains(n) || b.Name.ToString().Contains(n));
+            }
+            return await branch.ToListAsync();
         }
 
         public async Task<ViewBranchDto> ViewBranch(Guid id)
@@ -116,20 +121,24 @@ namespace ReadOn.Services
         {
             try
             {
-                var name = await _dbContext.Branches.Where(u => u.Name == value.Name).FirstOrDefaultAsync();
-                if (name != null)
-                {
-                    return new ApiResponse<Branch>(false, "The name already exists.", null, 404);
-                }
 
                 var branch = await _dbContext.Branches.FindAsync(id);
                 if (branch == null) {
                     return new ApiResponse<Branch>(false, "Admin Id not Found.", null, 404);
                 }
 
-                branch.Name = value.Name;
-                branch.Contact = value.ContactNo;
-                branch.Location = value.Location;
+                if (branch.Name != value.Name)
+                {
+                    var name = await _dbContext.Branches.Where(u => u.Name == value.Name).FirstOrDefaultAsync();
+                    if (name != null)
+                    {
+                        return new ApiResponse<Branch>(false, "The name already exists.", null, 404);
+                    }
+                }
+
+                branch.Name = value.Name?? branch.Name;
+                branch.Contact = value.ContactNo?? branch.Name;
+                branch.Location = value.Location ?? branch.Name;
 
                 await _dbContext.SaveChangesAsync();
 

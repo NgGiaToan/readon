@@ -111,23 +111,26 @@ namespace ReadOn.Services
         public async Task<ApiResponse<Book>> UpdateBook(CreateUpdateBookDto value, Guid id)
         {
             try
-            {
-                var name = await _dbContext.Books.Where(u => u.Name == value.Name).FirstOrDefaultAsync();
-                if (name != null)
-                {
-                    return new ApiResponse<Book>(false, "The name already exists.", null, 404);
-                }
-
+            {           
                 var book = await _dbContext.Books.FindAsync(id);
                 if (book == null)
                     return new ApiResponse<Book>(false, "Book not found.", null, 404);
 
-                book.Name = value.Name;
-                book.Type = value.Type;
-                book.Language = value.Language;
+                if (value.Name != book.Name)
+                {
+                    var bookname = await _dbContext.Books.Where(u => u.Name == value.Name).FirstOrDefaultAsync();
+                    if (bookname != null)
+                    {
+                        return new ApiResponse<Book>(false, "The username already exists.", null, 404);
+                    }
+                }
+
+                book.Name = value.Name ?? book.Name;
+                book.Type = value.Type ?? book.Type;
+                book.Language = value.Language ?? book.Language;
                 int borrowed = book.Total - book.Available;
-                book.Total = value.Quantity;
-                book.Available = value.Quantity - borrowed;
+                book.Total = value.Quantity != 0 ? value.Quantity : book.Total;
+                book.Available = book.Total - borrowed;
                 
                 await _dbContext.SaveChangesAsync();
 

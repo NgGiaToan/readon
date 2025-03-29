@@ -8,7 +8,7 @@ namespace ReadOn.Services
     {
         Task<int> TotalBranch();
         Task<List<ItemDto>> Branches();
-        Task<List<BranchDto>> BranchAsync();
+        Task<List<BranchDto>> BranchAsync(string? n);
         Task<ViewBranchDto> ViewBranch(Guid id);
         Task<ApiResponse<Branch>> CreateBranch(CreateUpdateBranchDto value, Guid id);
         Task<ApiResponse<Branch>> UpdateBranch(CreateUpdateBranchDto value, Guid id);

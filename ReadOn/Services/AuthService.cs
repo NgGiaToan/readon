@@ -85,6 +85,7 @@ namespace ReadOn.Services
             var authClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.GivenName, user.Firstname+" "+ user.Lastname),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
@@ -204,7 +205,7 @@ namespace ReadOn.Services
                 var changePassword = await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
                 if (!changePassword.Succeeded)
                 {
-                    return new ApiResponse<bool>(false, "New Password is Incorrect.", false, 404);
+                    return new ApiResponse<bool>(false, "New password must include at least one capital letter, one digit, and one special symbol.", false, 404);
                 }
 
                 return new ApiResponse<bool>(true, "Change Password Successfully.", true, 201);

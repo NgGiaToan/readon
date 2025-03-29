@@ -8,7 +8,7 @@ namespace ReadOn.Services
     { 
         Task<int> TotalUsers();
         Task<List<AdminDto>> AdminAsync();
-        Task<List<UserDto>> UserAsync();
+        Task<List<UserDto>> UserAsync(string? n);
         Task<ViewUserDto> ViewUser(Guid id);
         Task<ApiResponse<ApplicationAccount>> CreateUser(CreateUpdateUserDto value, Guid id);
         Task<ApiResponse<ApplicationAccount>> UpdateUser(CreateUpdateUserDto value, Guid id);

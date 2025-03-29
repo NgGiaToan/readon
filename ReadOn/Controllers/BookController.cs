@@ -36,7 +36,7 @@ namespace ReadOn.Controllers
             return Ok(bookDtos);
         }
 
-        [Authorize(Roles = AppRole.Admin)]
+        [Authorize]
         [HttpGet("view-book")]
         public async Task<IActionResult> ViewBook(Guid id)
         {

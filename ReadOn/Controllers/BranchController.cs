@@ -36,9 +36,9 @@ namespace ReadOn.Controllers
 
         [Authorize(Roles = AppRole.Admin)]
         [HttpGet("branches")]
-        public async Task<IActionResult> BranchDto()
+        public async Task<IActionResult> BranchDto(string? n )
         {
-            List<BranchDto> branches = await _branchService.BranchAsync();
+            List<BranchDto> branches = await _branchService.BranchAsync(n);
             return Ok(branches);
         }
 

@@ -41,7 +41,16 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
-builder.Services.AddCors(options => options.AddDefaultPolicy(policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy => policy
+            .WithOrigins("http://localhost:5173") 
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+    );
+});
+
 
 builder.Services.AddIdentity<ApplicationAccount, IdentityRole<Guid>>()
     .AddEntityFrameworkStores<MyDbContext>()
@@ -102,6 +111,8 @@ builder.Services.Configure<IdentityOptions>(options =>
 
 
 var app = builder.Build();
+
+app.UseCors("AllowFrontend");
 
 app.Use(async (context, next) =>
 {

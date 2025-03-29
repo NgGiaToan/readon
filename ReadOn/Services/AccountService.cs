@@ -28,7 +28,7 @@ namespace ReadOn.Services
             List<AdminDto> itemDto = (await _userManager.GetUsersInRoleAsync(AppRole.Admin))
                 .Select(a => new AdminDto
                 {
-                    Fullname = a.Lastname + a.Firstname,
+                    Fullname = a.Firstname + " "+ a.Lastname,
                     Id = a.Id,
                     Status = a.Status.ToString()
                 })
@@ -36,17 +36,22 @@ namespace ReadOn.Services
             return itemDto;
         }
 
-        public async Task<List<UserDto>> UserAsync()
+        public async Task<List<UserDto>> UserAsync(string? n)
         {
-            List<UserDto> itemDto = (await _userManager.GetUsersInRoleAsync(AppRole.User))
+            var itemDto = (await _userManager.GetUsersInRoleAsync(AppRole.User))
                 .Select(a => new UserDto
                 {
                     Id = a.Id,
-                    Name = a.Lastname + a.Firstname,
+                    Name = a.Firstname + " " + a.Lastname,
                     Email = a.Email,
                     Username = a.UserName,
-                }).ToList();
-            return itemDto;
+                });
+            if (!string.IsNullOrEmpty(n))
+            {
+                n = n.Trim();
+                itemDto = itemDto.Where(i => i.Id.ToString().Contains(n) || i.Name.ToString().Contains(n));
+            }
+            return itemDto.ToList();
         }
 
         public async Task<ViewUserDto> ViewUser(Guid id)
@@ -139,15 +144,18 @@ namespace ReadOn.Services
                     return new ApiResponse<ApplicationAccount>(false, "Account not Found.", null, 404);
                 }
 
-                var username = await _userManager.FindByNameAsync(value.Username);
-                if (username != null) {
-                    return new ApiResponse<ApplicationAccount>(false, "The username already exists.", null, 404);
+                if (value.Username != account.UserName)
+                {
+                    var username = await _userManager.FindByNameAsync(value.Username);
+                    if (username != null) {
+                        return new ApiResponse<ApplicationAccount>(false, "The username already exists.", null, 404);
+                    }
                 }
 
-                account.Firstname = value.Name.Trim();
+                account.Firstname = value.Name.Trim() ?? account.Firstname +" "+ account.Lastname;
                 account.Lastname = null;
-                account.Email = value.Email.Trim();
-                account.UserName = value.Username.Trim();
+                account.Email = value.Email.Trim()?? account.Email;
+                account.UserName = value.Username.Trim()?? account.UserName;
 
                 var resetToken = await _userManager.GeneratePasswordResetTokenAsync(account);
                 var passwordResult = await _userManager.ResetPasswordAsync(account, resetToken, value.Password.Trim());

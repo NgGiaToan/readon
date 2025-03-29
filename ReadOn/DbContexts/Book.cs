@@ -1,4 +1,6 @@
-﻿namespace ReadOn.DbContexts
+﻿using System.Text.Json.Serialization;
+
+namespace ReadOn.DbContexts
 {
     public class Book
     {
@@ -11,6 +13,7 @@
         public DateTime CreateAt { get; set; } = DateTime.Now; 
         public string? Note { get; set; }
 
+        [JsonIgnore]
         public ApplicationAccount ApplicationAccount { get; set; }
         public Guid ApplicationAccountId { get; set; }
 
