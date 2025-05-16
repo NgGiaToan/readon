@@ -1,7 +1,7 @@
-# 🖥️ ASP.NET Core Web API - Doctor Management
+# 🖥️ ASP.NET Core Web API - Readon Library Management
 
-**Doctor Manager API** là một hệ thống quản lý thông tin được xây dựng bằng **ASP.NET Core Web API**.  
-Ứng dụng này cung cấp các endpoint RESTful giúp quản trị viên và người dùng tương tác với cơ sở dữ liệu.
+Đây là RESTful API được xây dựng bằng **ASP.NET Core**, phục vụ cho hệ thống quản lý thư viện **Readon**.  
+Hệ thống cho phép quản trị sách, người dùng, chi nhánh và quá trình mượn-trả tài liệu một cách dễ dàng.
 
 ---
 
@@ -9,17 +9,20 @@
 
 - Ngôn ngữ: **C#**
 - Nền tảng: **ASP.NET Core**
+- ORM: **Entity Framework Core**
 - Cơ sở dữ liệu: **SQL Server**
 - Kiểm thử & tài liệu API: **Swagger**
+- Authentication: **JWT Bearer Token**
 
 ---
 
 ## 🚀 Tính năng chính
 
-- ✅ CRUD đầy đủ cho bệnh nhân
+- ✅ Đăng nhập / đăng ký người dùng
+- ✅ CRUD sách, người dùng, chi nhánh
+- ✅ Quản lý mượn, trả sách
 - ✅ Swagger UI để test API trực tiếp
 - ✅ Hỗ trợ phân trang, tìm kiếm, sắp xếp
-- ✅ Xác nhận hoặc từ chối bệnh nhân
 
 ---
 
@@ -27,7 +30,7 @@
 
 1. **Clone repository**
    ```bash
-   git clone https://github.com/NgGiaToan/doctor-management-api.git
+   git clone https://github.com/NgGiaToan/readon.git
 
 2. Mở file .sln bằng Visual Studio.
 
